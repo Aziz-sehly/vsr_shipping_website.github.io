@@ -1,0 +1,135 @@
+/* clients.css — page "Nos clients & partenaires" + messages d'envoi des formulaires
+   À charger APRÈS css/vsr-theme.css */
+
+:root { --cl-accent: var(--primary, #0d6efd); }
+
+/* ---------- Bandeau défilant de logos ---------- */
+.logo-marquee {
+    overflow: hidden;
+    background: #fff;
+    border-bottom: 1px solid rgba(0, 0, 0, .06);
+    padding: 1.5rem 0;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+}
+.logo-track {
+    display: flex;
+    align-items: center;
+    gap: 4rem;
+    width: max-content;
+    animation: logoScroll 32s linear infinite;
+}
+.logo-marquee:hover .logo-track { animation-play-state: paused; }
+.logo-track img {
+    height: 56px;
+    width: auto;
+    max-width: 150px;
+    object-fit: contain;
+    filter: grayscale(100%);
+    opacity: .7;
+    transition: filter .3s, opacity .3s, transform .3s;
+}
+.logo-track img:hover { filter: none; opacity: 1; transform: scale(1.12); }
+@keyframes logoScroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+}
+
+/* ---------- Cartes clients ---------- */
+.client-card {
+    position: relative;
+    height: 100%;
+    padding: 2rem 1.5rem 1.5rem;
+    text-align: center;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, .07);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+}
+.client-card::before {            /* barre colorée qui se déploie au survol */
+    content: "";
+    position: absolute;
+    left: 0; top: 0;
+    width: 100%; height: 4px;
+    background: var(--cl-accent);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .4s ease;
+}
+.client-card::after {             /* reflet qui traverse la carte */
+    content: "";
+    position: absolute;
+    top: 0; left: -80%;
+    width: 50%; height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .7), transparent);
+    transform: skewX(-20deg);
+    pointer-events: none;
+}
+.client-card:hover {
+    transform: translateY(-8px);
+    border-color: transparent;
+    box-shadow: 0 18px 40px rgba(15, 23, 43, .14);
+}
+.client-card:hover::before { transform: scaleX(1); }
+.client-card:hover::after  { left: 130%; transition: left .8s ease; }
+
+.client-logo {
+    height: 140px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+.client-logo img {
+    max-width: 85%;
+    max-height: 120px;
+    object-fit: contain;
+    filter: grayscale(100%);
+    opacity: .8;
+    transition: filter .4s ease, opacity .4s ease, transform .4s ease;
+}
+.client-card:hover .client-logo img { filter: none; opacity: 1; transform: scale(1.08); }
+.client-card h5 { margin: 0; font-size: 1.05rem; font-weight: 600; }
+
+/* Sur écran tactile : logos toujours en couleur */
+@media (hover: none) {
+    .client-logo img, .logo-track img { filter: none; opacity: 1; }
+}
+
+/* ---------- Bloc d'appel à l'action ---------- */
+.clients-cta {
+    background: linear-gradient(135deg, #0f172b 0%, #1c2a4a 100%);
+    border-radius: 16px;
+    padding: 3rem 2rem;
+    color: #fff;
+    text-align: center;
+}
+.clients-cta h2 { color: #fff; }
+
+/* ---------- Messages des formulaires (mailer.js) ---------- */
+.mailer-status {
+    display: none;
+    margin-top: 1rem;
+    padding: .9rem 1.1rem;
+    border-radius: 8px;
+    font-size: .95rem;
+    text-align: left;
+}
+.mailer-status.show {
+    display: block;
+    animation: mailerIn .5s ease both;
+}
+.mailer-status.is-success { background: #e8f7ee; color: #146c3a; border: 1px solid #b7e4c7; }
+.mailer-status.is-error   { background: #fdecec; color: #a12622; border: 1px solid #f5c2c0; }
+@keyframes mailerIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: none; }
+}
+
+/* ---------- Accessibilité : réduire les animations ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .logo-track { animation: none; flex-wrap: wrap; width: auto; justify-content: center; }
+    .client-card, .client-card::before, .client-card::after,
+    .client-logo img, .mailer-status.show { transition: none; animation: none; }
+}
